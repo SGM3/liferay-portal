@@ -7,3 +7,11 @@ if exist "%CATALINA_HOME%/jre@java.version@/win" (
 )
 
 set "CATALINA_OPTS=%CATALINA_OPTS% -Dfile.encoding=UTF8 -Djava.net.preferIPv4Stack=true @java.security.config@ -Dorg.apache.catalina.loader.WebappClassLoader.ENABLE_CLEAR_REFERENCES=false -Duser.timezone=GMT -Xmx1024m -XX:MaxPermSize=384m"
+
+if not "%JAVA_HOME%" == "" (
+	set "PATH=%JAVA_HOME%/bin;%PATH%"
+)
+
+if not "%JRE_HOME%" == "" (
+	set "PATH=%JRE_HOME%/bin;%PATH%"
+)
