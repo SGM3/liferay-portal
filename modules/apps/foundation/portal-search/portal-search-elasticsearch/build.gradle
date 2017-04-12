@@ -1,5 +1,5 @@
-String elasticsearchVersion = "5.1.1"
-String luceneVersion = "6.3.0"
+String elasticsearchVersion = "5.2.0"
+String luceneVersion = "6.4.0"
 
 configurations {
 	elasticsearchPlugins {
