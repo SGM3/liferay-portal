@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.process.ProcessConfig;
 import com.liferay.portal.kernel.process.ProcessConfig.Builder;
 import com.liferay.portal.kernel.process.local.LocalProcessExecutor;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.OSDetector;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -81,6 +82,8 @@ public class LPKGIndexValidator {
 
 	public LPKGIndexValidator() {
 		Builder builder = new Builder();
+
+		_checkExecutablePath("java");
 
 		builder.setArguments(Arrays.asList("-Djava.awt.headless=true"));
 
@@ -299,10 +302,69 @@ public class LPKGIndexValidator {
 		return true;
 	}
 
+	private void _checkExecutablePath(String executable) {
+		String path = System.getProperty("PATH");
+
+		String[] pathElements = StringUtil.split(path, File.pathSeparator);
+
+		for (String pathElement : pathElements) {
+			String executablePath = _getExecutablePath(pathElement, executable);
+
+			if (executablePath != null) {
+				if (_log.isInfoEnabled()) {
+					StringBundler sb = new StringBundler(4);
+
+					sb.append("Found ");
+					sb.append(executable);
+					sb.append(" in path: ");
+					sb.append(executablePath);
+
+					_log.info(sb.toString());
+				}
+
+				return;
+			}
+		}
+
+		if (_log.isWarnEnabled()) {
+			StringBundler sb = new StringBundler(4);
+
+			sb.append("Unable to find ");
+			sb.append(executable);
+			sb.append(" in path: ");
+			sb.append(path);
+
+			_log.warn(sb.toString());
+		}
+	}
+
 	private void _cleanUp(List<URI> uris) throws MalformedURLException {
 		for (URI uri : uris) {
 			_bytesURLProtocolSupport.removeBytes(uri.toURL());
 		}
+	}
+
+	private String _getExecutablePath(String folder, String executable) {
+		File executablePath = new File(folder, executable);
+
+		if (executablePath.exists()) {
+			return executablePath.getAbsolutePath();
+		}
+
+		if (OSDetector.isWindows()) {
+			String[] extensions = StringUtil.split(
+				System.getProperty("PathExt"));
+
+			for (String extension : extensions) {
+				executablePath = new File(folder, executable + extension);
+
+				if (executablePath.exists()) {
+					return executablePath.getAbsolutePath();
+				}
+			}
+		}
+
+		return null;
 	}
 
 	private List<URI> _getTargetPlatformIndexURIs() throws Exception {
