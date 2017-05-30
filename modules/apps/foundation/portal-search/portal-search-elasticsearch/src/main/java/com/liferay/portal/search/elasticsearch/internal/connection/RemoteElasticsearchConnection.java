@@ -38,6 +38,8 @@ import java.util.Set;
 
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.logging.LogConfigurator;
+import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.plugins.Plugin;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
@@ -177,7 +179,7 @@ public class RemoteElasticsearchConnection extends BaseElasticsearchConnection {
 		settingsBuilder.put(
 			"cluster.name", elasticsearchConfiguration.clusterName());
 		settingsBuilder.put("http.enabled", false);
-		settingsBuilder.put("node.master", false);
+		settingsBuilder.put("node.master", true);
 		settingsBuilder.put("node.data", false);
 		settingsBuilder.put("node.ingest", false);
 		settingsBuilder.put(

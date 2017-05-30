@@ -112,6 +112,8 @@ public class DefaultGroupByTranslator implements GroupByTranslator {
 
 		HighlightBuilder highlightBuilder = new HighlightBuilder();
 
+		highlightBuilder.highlighterType("unified");
+
 		for (String highlightFieldName : queryConfig.getHighlightFieldNames()) {
 			addHighlightedField(
 				topHitsAggregationBuilder, highlightBuilder, queryConfig,
