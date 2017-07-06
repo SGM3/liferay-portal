@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.search.filter.GeoDistanceRangeFilter;
 import com.liferay.portal.kernel.search.geolocation.GeoLocationPoint;
 import com.liferay.portal.search.elasticsearch.filter.GeoDistanceRangeFilterTranslator;
 
-import org.elasticsearch.index.query.GeoDistanceRangeQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 
@@ -34,6 +33,13 @@ public class GeoDistanceRangeFilterTranslatorImpl
 	@Override
 	public QueryBuilder translate(
 		GeoDistanceRangeFilter geoDistanceRangeFilter) {
+
+		throw new java.lang.UnsupportedOperationException("Method GeoDistanceRangeFilterImpl.translate(GeoDistanceRangeFilter geoDistanceRangeFilter) must be refactored");
+
+		/*
+		* https://github.com/elastic/elasticsearch/pull/22835
+		* 
+		* 
 
 		GeoLocationPoint pinGeoLocationPoint =
 			geoDistanceRangeFilter.getPinGeoLocationPoint();
@@ -55,6 +61,7 @@ public class GeoDistanceRangeFilterTranslatorImpl
 			String.valueOf(geoDistanceRangeFilter.getUpperBoundGeoDistance()));
 
 		return geoDistanceRangeQueryBuilder;
+		*/
 	}
 
 }
