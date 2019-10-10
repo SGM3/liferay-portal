@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.ServiceProxyFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -493,6 +494,8 @@ public class DLUtil {
 		_dl = dl;
 	}
 
-	private static DL _dl;
+	private static DL _dl =
+		ServiceProxyFactory.newServiceTrackedInstance(
+			DL.class, DLUtil.class, "_dl", true);
 
 }

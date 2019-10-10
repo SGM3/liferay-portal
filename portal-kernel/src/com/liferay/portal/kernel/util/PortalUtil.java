@@ -2306,6 +2306,8 @@ public class PortalUtil {
 		_portal = portal;
 	}
 
-	private static Portal _portal;
+	private static Portal _portal=
+		ServiceProxyFactory.newServiceTrackedInstance(
+			Portal.class, PortalUtil.class, "_portal", true);
 
 }
