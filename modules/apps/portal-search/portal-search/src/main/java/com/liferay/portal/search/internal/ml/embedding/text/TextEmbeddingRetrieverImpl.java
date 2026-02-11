@@ -171,26 +171,25 @@ public class TextEmbeddingRetrieverImpl implements TextEmbeddingRetriever {
 	protected void activate(
 		Map<String, Object> properties, BundleContext bundleContext) {
 
-		String[] disabledProviders = (String[])properties.get(
-			"disabledProviders");
+		_disabledProviders = (String[])properties.get("disabledProviders");
 
 		_addTextEmbeddingProvider(
-			disabledProviders, "huggingFaceInferenceAPI",
-			new HuggingFaceInferenceAPITextEmbeddingProvider());
+			_disabledProviders, "huggingFaceInferenceAPI",
+			_huggingFaceInterfaceApiTextProvider);
 		_addTextEmbeddingProvider(
-			disabledProviders, "huggingFaceInferenceEndpoint",
-			new HuggingFaceInferenceEndpointTextEmbeddingProvider());
+			_disabledProviders, "huggingFaceInferenceEndpoint",
+			_huggingFaceInferenceEndpointTextProvider);
 		_addTextEmbeddingProvider(
-			disabledProviders, "openai", new OpenAITextEmbeddingProvider());
+			_disabledProviders, "openai", _openAITextEmbeddingTextProvider);
 		_addTextEmbeddingProvider(
-			disabledProviders, "txtai", new TXTAITextEmbeddingProvider());
+			_disabledProviders, "txtai", _txtAITextEmbeddingTextProvider);
 
 		_serviceRegistration = bundleContext.registerService(
 			FeatureFlagListener.class,
 			(companyId, featureFlagKey, enabled) -> {
 				if (enabled) {
 					_addTextEmbeddingProvider(
-						"vertexAI", new VertexAITextEmbeddingProvider());
+						"vertexAI", _vertexAITextEmbeddingTextProvider);
 				}
 				else {
 					_removeTextEmbeddingProvider("vertexAI");
@@ -297,6 +296,17 @@ public class TextEmbeddingRetrieverImpl implements TextEmbeddingRetriever {
 	private static final Log _log = LogFactoryUtil.getLog(
 		TextEmbeddingRetrieverImpl.class);
 
+	private String[] _disabledProviders;
+
+	@Reference(target = "(provider.name=HuggingFaceInferenceEndpoint)")
+	private TextEmbeddingProvider _huggingFaceInferenceEndpointTextProvider;
+
+	@Reference(target = "(provider.name=HuggingFaceInferenceAPI)")
+	private TextEmbeddingProvider _huggingFaceInterfaceApiTextProvider;
+
+	@Reference(target = "(provider.name=OpenAI)")
+	private TextEmbeddingProvider _openAITextEmbeddingTextProvider;
+
 	@Reference
 	private SemanticSearchConfigurationProvider
 		_semanticSearchConfigurationProvider;
@@ -304,5 +314,11 @@ public class TextEmbeddingRetrieverImpl implements TextEmbeddingRetriever {
 	private ServiceRegistration<?> _serviceRegistration;
 	private final Map<String, TextEmbeddingProvider> _textEmbeddingProviders =
 		new ConcurrentHashMap<>();
+
+	@Reference(target = "(provider.name=TxtAIText)")
+	private TextEmbeddingProvider _txtAITextEmbeddingTextProvider;
+
+	@Reference(target = "(provider.name=VertexAI)")
+	private TextEmbeddingProvider _vertexAITextEmbeddingTextProvider;
 
 }
