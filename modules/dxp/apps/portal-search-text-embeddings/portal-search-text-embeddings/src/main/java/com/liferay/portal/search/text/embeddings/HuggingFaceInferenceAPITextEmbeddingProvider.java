@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-package com.liferay.portal.search.internal.ml.embedding.text;
+package com.liferay.portal.search.text.embeddings;
 
 import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.StringPool;
@@ -17,8 +17,9 @@ import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.search.internal.ml.embedding.text.util.ConfigurationValidationUtil;
+import com.liferay.portal.search.ml.embedding.util.ConfigurationValidationUtil;
 import com.liferay.portal.search.rest.dto.v1_0.EmbeddingProviderConfiguration;
+import com.liferay.portal.search.rest.text.embeddings.configuration.TextEmbeddingProvider;
 
 import java.net.HttpURLConnection;
 
@@ -31,10 +32,7 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Petteri Karttunen
  */
-@Component(
-	property = "provider.name=HuggingFaceInferenceAPI",
-	service = TextEmbeddingProvider.class
-)
+@Component(service = TextEmbeddingProvider.class)
 public class HuggingFaceInferenceAPITextEmbeddingProvider
 	implements TextEmbeddingProvider {
 
@@ -53,6 +51,11 @@ public class HuggingFaceInferenceAPITextEmbeddingProvider
 		}
 
 		return _getEmbedding(attributes, text);
+	}
+
+	@Override
+	public String getProviderName() {
+		return _PROVIDE_NAME;
 	}
 
 	private Double[] _getEmbedding(
@@ -123,6 +126,8 @@ public class HuggingFaceInferenceAPITextEmbeddingProvider
 
 		return options;
 	}
+
+	private static final String _PROVIDE_NAME = "HuggingFaceInferenceAPI";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		HuggingFaceInferenceAPITextEmbeddingProvider.class);
